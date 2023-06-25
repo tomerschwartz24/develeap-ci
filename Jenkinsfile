@@ -11,7 +11,7 @@ pipeline {
         stage('Build') { 
             steps { 
                 script{
-                 app = docker.build("counter")
+                 app = docker.build("counter-service")
                 }
             }
         }
