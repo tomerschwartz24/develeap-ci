@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: counter-service
+  namespace: tomer-candidate
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: counter-service
+  template:
+    metadata:
+      labels:
+        app: counter-service
+    spec:
+      containers:
+        - name: counter-service
+         
+          #image: 411202742861.dkr.ecr.eu-west-1.amazonaws.com/tomer/counter-service:latest
+          #image: 384005890259.dkr.ecr.eu-central-1.amazonaws.com/production-images/counter-service:latest
+          ports:
+            - containerPort: 80
