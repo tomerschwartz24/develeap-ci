@@ -32,7 +32,7 @@ pipeline {
                 script {
                     sh """
                     git clone https://github.com/tomerschwartz24/mock-app-infra.git
-                    git pull origin 
+                    git pull origin main 
                     yq eval   '.image.tag = "${env.BUILD_NUMBER}"' -i counter-app-helm/values.yaml
                     git add counter-app-helm/values.yaml
                     git commit counter-app-helm/values.yaml -m " Updated counter-app Helm chart image tag to \${BUILD_NUMBER} "
