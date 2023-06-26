@@ -7,7 +7,6 @@ pipeline {
                 checkout scm
             }
         }
-        
         stage('Build') {
             steps {
                 script {
@@ -15,8 +14,7 @@ pipeline {
                 }
             }
         }
-
-        stage('Push Image to ECR') {
+        stage('Push to ECR') {
             steps {
                 script {
                     docker.withRegistry('https://384005890259.dkr.ecr.eu-central-1.amazonaws.com/counter-service', 'ecr:eu-central-1:aws-creds') {
@@ -26,19 +24,18 @@ pipeline {
                 }
             }
         }
-        
         stage('Update Helm Chart') {
             steps {
                 script {
+                    checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[credentialsId: 'github-ATOKEN', url: 'git@github.com:tomerschwartz24/mock-app-infra.git', refspec: '+refs/heads/*:refs/remotes/origin/*']]])
                     sh """
-                    git pull origin main 
-                    yq eval   '.image.tag = "${env.BUILD_NUMBER}"' -i mock-app-infra/counter-app-helm/values.yaml
-                    git add mock-app-infra/counter-app-helm/values.yaml
-                    git commit mock-app-infra/counter-app-helm/values.yaml -m " Updated counter-app Helm chart image tag to \${BUILD_NUMBER} "
+                    git checkout main
+                    yq eval   '.image.tag = "${env.BUILD_NUMBER}"' -i counter-app-helm/values.yaml
+                    git add counter-app-helm/values.yaml
+                    git commit counter-app-helm/values.yaml -m " Updated counter-app Helm chart image tag to \${BUILD_NUMBER} "
                     git push --set-upstream origin main
                 """
                 }
-
             }
         }
     }
