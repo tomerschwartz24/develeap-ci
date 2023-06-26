@@ -31,7 +31,6 @@ pipeline {
             steps {
                 script {
                     sh """
-                    git clone https://github.com/tomerschwartz24/mock-app-infra.git
                     git pull origin main 
                     yq eval   '.image.tag = "${env.BUILD_NUMBER}"' -i counter-app-helm/values.yaml
                     git add counter-app-helm/values.yaml
