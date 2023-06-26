@@ -29,7 +29,8 @@ pipeline {
         
         stage('Update Helm Chart') {
             steps {
-                build job: 'mock-app-helm-ci', parameters: [string(name: 'TRIGGER_BUILD_NUMBER', value: "${env.BUILD_NUMBER}")]
+            build job: 'mock-app-helm-ci', parameters: [string(name: 'TRIGGER_BUILD_NUMBER', value: "${params.BUILD_NUMBER}")]
+
             }
         }
     }
