@@ -4,6 +4,8 @@
 
 replicaCount: 1
 
+namespace: counter-app
+
 image:
   repository: 384005890259.dkr.ecr.eu-central-1.amazonaws.com/counter-service
   pullPolicy: IfNotPresent
@@ -16,7 +18,7 @@ fullnameOverride: ""
 
 serviceAccount:
   # Specifies whether a service account should be created
-  create: true
+  create: false
   # Annotations to add to the service account
   annotations: {}
   # The name of the service account to use.
