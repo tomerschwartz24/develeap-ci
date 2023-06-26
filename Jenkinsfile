@@ -29,7 +29,16 @@ pipeline {
         
         stage('Update Helm Chart') {
             steps {
-            build job: 'mock-app-helm-ci', parameters: [string(name: 'TRIGGER_BUILD_NUMBER', value: "${params.BUILD_NUMBER}")]
+                script {
+                    sh """
+                    git clone https://github.com/tomerschwartz24/mock-app-infra.git
+                    git pull origin 
+                    yq eval   '.image.tag = "${env.BUILD_NUMBER}"' -i counter-app-helm/values.yaml
+                    git add counter-app-helm/values.yaml
+                    git commit counter-app-helm/values.yaml -m " Updated counter-app Helm chart image tag to \${BUILD_NUMBER} "
+                    git push --set-upstream origin main
+                """
+                }
 
             }
         }
