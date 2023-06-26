@@ -27,10 +27,14 @@ pipeline {
         stage('Update Helm Chart') {
             steps {
                 script {
-                    git branch: 'master', url: 'https://github.com/your/repo.git'
-                    sh "sed -i 's/imageTag:.*/imageTag: ${env.BUILD_NUMBER}/' /values.yaml"
-                    git add: '.', comment: "Update Helm chart image tag to ${env.BUILD_NUMBER}"
-                    git push
+                    checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[credentialsId: 'github-ATOKEN', url: 'git@github.com:tomerschwartz24/mock-app-infra.git', refspec: '+refs/heads/*:refs/remotes/origin/*']]])
+                    sh """
+                    git checkout main
+                    yq eval   '.image.tag = "${env.BUILD_NUMBER}"' -i counter-app-helm/values.yaml
+                    git add counter-app-helm/values.yaml
+                    git commit counter-app-helm/values.yaml -m " Updated counter-app Helm chart image tag to \${BUILD_NUMBER} "
+                    git push --set-upstream origin main
+                """
                 }
             }
         }
