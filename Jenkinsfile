@@ -24,7 +24,10 @@ pipeline {
                 }
             }
         }
-        stage('Update Helm Chart') {
+        stage('Update Helm Chart') {  
+            options {
+                skipDefaultCheckout() // Skip the default checkout behavior
+            }
             steps {
                 script {
                     checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[credentialsId: 'github-ATOKEN', url: 'git@github.com:tomerschwartz24/mock-app-infra.git', refspec: '+refs/heads/*:refs/remotes/origin/*']]])
