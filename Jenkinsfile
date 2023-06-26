@@ -1,6 +1,31 @@
 pipeline {
     agent any
     stages {
+        stage('Pre-check') {
+            steps {
+                script {
+                    // Check if the change is in the source repository
+                    def sourceRepoChange = false
+                    def sourceRepoUrl = 'https://github.com/tomerschwartz24/mock-app/'
+                    def pipelineRepoUrl = 'git@github.com:tomerschwartz24/mock-app-infra.git'
+                    
+                    for (change in currentBuild.changeSets) {
+                        for (commit in change) {
+                            if (commit.url.startsWith(sourceRepoUrl)) {
+                                sourceRepoChange = true
+                                break
+                            }
+                        }
+                    }
+                    
+                    if (!sourceRepoChange) {
+                        echo 'Change was triggered via Update Helm Chart. Stopping the build.'
+                        currentBuild.result = 'ABORTED'
+                        return
+                    }
+                }
+            }
+        }
         stage('Checkout') {
             steps {
                 echo 'Checking out code from repository'
@@ -25,9 +50,6 @@ pipeline {
             }
         }
         stage('Update Helm Chart') {  
-            options {
-                skipDefaultCheckout() // Skip the default checkout behavior
-            }
             steps {
                 script {
                     checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[credentialsId: 'github-ATOKEN', url: 'git@github.com:tomerschwartz24/mock-app-infra.git', refspec: '+refs/heads/*:refs/remotes/origin/*']]])
