@@ -7,6 +7,7 @@ pipeline {
                 checkout scm
             }
         }
+        
         stage('Build') {
             steps {
                 script {
@@ -14,27 +15,22 @@ pipeline {
                 }
             }
         }
+
         stage('Push Image to ECR') {
             steps {
-            script {
-                docker.withRegistry('https://384005890259.dkr.ecr.eu-central-1.amazonaws.com/counter-service', 'ecr:eu-central-1:aws-creds') {
-                    app.push("${env.BUILD_NUMBER}")
-                    app.push("latest")
+                script {
+                    docker.withRegistry('https://384005890259.dkr.ecr.eu-central-1.amazonaws.com/counter-service', 'ecr:eu-central-1:aws-creds') {
+                        app.push("${env.BUILD_NUMBER}")
+                        app.push("latest")
+                    }
                 }
             }
         }
-    }
-    stage('Update Helm Chart') {
-        steps {
-            script {
-                try {
-                    build job: 'mock-app-helm-ci'
-                } catch (Exception e) {
-                    // Handle the failure gracefully
-                    echo "Failed to update Helm Chart: ${e.getMessage()}"
-                }
+        
+        stage('Update Helm Chart') {
+            steps {
+                build job: 'mock-app-helm-ci', parameters: [string(name: 'TRIGGER_BUILD_NUMBER', value: "${env.BUILD_NUMBER}")]
             }
         }
     }
-}
 }
