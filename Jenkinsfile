@@ -32,9 +32,9 @@ pipeline {
                 script {
                     sh """
                     git pull origin main 
-                    yq eval   '.image.tag = "${env.BUILD_NUMBER}"' -i counter-app-helm/values.yaml
-                    git add counter-app-helm/values.yaml
-                    git commit counter-app-helm/values.yaml -m " Updated counter-app Helm chart image tag to \${BUILD_NUMBER} "
+                    yq eval   '.image.tag = "${env.BUILD_NUMBER}"' -i mock-app-infra/counter-app-helm/values.yaml
+                    git add mock-app-infra/counter-app-helm/values.yaml
+                    git commit mock-app-infra/counter-app-helm/values.yaml -m " Updated counter-app Helm chart image tag to \${BUILD_NUMBER} "
                     git push --set-upstream origin main
                 """
                 }
