@@ -8,8 +8,9 @@ def index():
     global counter
     if request.method == "GET":
         counter+=1
-        return "Hmm, Plus 1 please "
+        return f"<h1>This pointless app has received a total of {counter} HTTP GET requests, Hooray! 🎉</h1>"
+
     else:
-        return str(f"This pointless app have : {counter} visitors, hooray! ")
+        return f"<h1>Our counter is: {counter} 😄</h1>"
 if __name__ == '__main__':
     app.run(debug=True,port=80,host='0.0.0.0')
