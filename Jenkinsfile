@@ -27,7 +27,7 @@ pipeline {
         stage('Update Helm Chart') {
             steps {
                 script {
-                    checkout([$class: 'GitSCM', branches: [[name: '*/app-chart']], userRemoteConfigs: [[credentialsId: 'github-ATOKEN', url: 'git@github.com:tomerschwartz24/mock-app.git']]])
+                    checkout([$class: 'GitSCM', branches: [[name: '*/app-chart']], userRemoteConfigs: [[credentialsId: 'github-ATOKEN', url: 'git@github.com:tomerschwartz24/mock-app.git', refspec: '+refs/heads/*:refs/remotes/origin/*']]])
                     sh """
                     yq eval   '.image.tag = "${env.BUILD_NUMBER}"' -i counter-app-helm/values.yaml
                     git add counter-app-helm/values.yaml
