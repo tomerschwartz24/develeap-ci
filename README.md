@@ -5,13 +5,16 @@ This repository contain all the necessary resources in order to build and deploy
 
 ## Repo Content 
 * Jenkinsfile to build and deploy the application to aws ECR (from my home jenkins lab) 
-- 
 
-* Python web application (dev-ci.py) including the requirements.txt
+* Python web application (counter-service.py) including the requirements.txt
 
-* Dockerfile to build the application and create an image out of it
+* Dockerfile to build the application and create a docker image out of it. 
 
-* Kubernetes manifests
- - both manifests are deployed under tomer-candidate namespace 
- - deployment.yaml  which labels the application and the containers.image to my ECR 
- - service.yaml to create a service of type loadbalancer and expose the application to the world
+### Jenkins Pipeline <br>
+- The pipeline  checkouts the repository. <br>
+- builds the application. <br>
+- pushes the docker image to ECR with the BUILD_NUMBER of jenkins + latest tag. <br>
+- Additionally the pipeline will check out the infra repo and update the application helm chart image.tag to the same build number the docker image have.
+
+### Counter-service application
+- Python application that checks the number of HTTP GET requests and "announce" them.
