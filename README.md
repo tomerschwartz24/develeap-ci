@@ -18,3 +18,8 @@ This repository contain all the necessary resources in order to build and deploy
 
 ### Counter-service application
 - Python application that checks the number of HTTP GET requests and "announce" them.
+
+# Architecture 
+
+
+  <img src="mock-app-arch.png" alt="alt text" width="800" height="600"> <br>
